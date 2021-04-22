@@ -1,12 +1,12 @@
 import React from 'react';
-import Sidebar from './components/Sidebar';
-import SidebarItem from './components/SidebarItem';
-import Main from './components/Main';
-import Login from './pages/Login';
+import Sidebar from '../components/Sidebar';
+import SidebarItem from '../components/SidebarItem';
+import Main from '../components/Main';
+import Login from './Login';
 
-import './index.css';
+import '../index.css';
 
-function App() {
+function User() {
   return (
     <div>
       <nav className="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
@@ -35,4 +35,4 @@ function App() {
   );
 }
 
-export default App;
+export default User;

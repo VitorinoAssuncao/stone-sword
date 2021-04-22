@@ -1,4 +1,5 @@
 import React from 'react';
+import { Redirect } from 'react-router';
 import Form from '../components/Form';
 import Label from '../components/Label';
 import Input from '../components/Input';
@@ -9,11 +10,16 @@ class Login extends React.Component {
         super(props);
         this.state = {'login': ''};
         this.state = {'password': ''};
+        this.state = {'logged':false};
 
         this.handleChangeLogin = this.handleChangeLogin.bind(this);
         this.handleChangePassword = this.handleChangePassword.bind(this);
 
         this.handleSubmit = this.handleSubmit.bind(this);
+    }
+
+    getStateLoggedd(){
+        return this.state.logged;
     }
 
     handleChangeLogin(event) {
@@ -41,9 +47,13 @@ class Login extends React.Component {
         fetch(`https://stone-shield.herokuapp.com/users/login`, requestOptions)
         .then(res => res.json())
         .then(res => console.log(res));
+        this.setState({logged:true});
     }
 
     render() {
+        if (this.getStateLoggedd()){
+            return <Redirect to='/user' />
+        }
         return (
         <Form>
             <h3 className="text-center">Seja bem vindo ao Mundo Marvel!</h3>
