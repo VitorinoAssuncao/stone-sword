@@ -45,8 +45,7 @@ class Login extends React.Component {
         }
 
         fetch(`https://stone-shield.herokuapp.com/users/login`, requestOptions)
-        .then(res => res.json())
-        .then(res => console.log(res));
+        .then(res => res.json());
         this.setState({logged:true});
     }
 
@@ -56,12 +55,12 @@ class Login extends React.Component {
         }
         return (
         <Form>
-            <h3 className="text-center">Seja bem vindo ao Mundo Marvel!</h3>
-            <div className="input-group m-1">
+            <h3 className="text-center m-2">Seja bem vindo ao Mundo Marvel!</h3>
+            <div className="form-group">
                 <Label input="login" value="Digite seu Login:" />
                 <Input type="text" name="login" handler={this.handleChangeLogin}/>
             </div>
-            <div className="input-group m-1">
+            <div className="form-group">
                 <Label input="password" value="Digite sua Senha:" />
                 <Input type="password" name="password" handler={this.handleChangePassword}/>
             </div>
@@ -69,7 +68,6 @@ class Login extends React.Component {
                 <Button color="success" type="submit" value="Logar"  click={(e) => this.handleSubmit(e)}/>
                 <Button color="info" type="submit" value="Cadastre-se" />
             </div>
-            <p>{this.state.res}</p>
         </Form>
         );
     }
