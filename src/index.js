@@ -7,7 +7,7 @@ import './index.css';
 import App from './pages/App';
 import User from './pages/User';
 import MarvelCharacther from './pages/Marvel-Characthers';
-import store from './redux/store';
+// import store from './redux/store';
 
 ReactDOM.render(
   <BrowserRouter>
