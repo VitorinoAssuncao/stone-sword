@@ -28,7 +28,7 @@ class MarvelCharacther extends React.Component {
       method : 'GET'
     }
     console.log(`http://gateway.marvel.com/v1/public/characters?${marvel_key}&nameStartsWith=${this.state.search}`)
-    fetch(`http://gateway.marvel.com/v1/public/characters?${marvel_key}&nameStartsWith=${this.state.search}`, requestOptions)
+    fetch(`https://gateway.marvel.com/v1/public/characters?${marvel_key}&nameStartsWith=${this.state.search}`, requestOptions)
     .then(res => console.log(res.json()));
   }    
 
