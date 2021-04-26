@@ -1,12 +1,13 @@
 import React from 'react';
+import { Link } from 'react-router-dom'
 
-function SidebarItem (props,icon,value){
+function SidebarItem (props,icon,link,value){
     return (
       <li className="nav-item">
-        <a className="nav-link" href="cddmonitor.herokuapp.com">
+        <Link className="nav-link" to={props.link}>
         <span className={`fas fa-${props.icon}`}></span>
          {props.value}
-      </a>
+      </Link>
     </li>
     );
   }
