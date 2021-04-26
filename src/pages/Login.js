@@ -1,9 +1,11 @@
 import React from 'react';
 import { Redirect } from 'react-router';
+import { Link} from 'react-router-dom';
 import Form from '../components/Form';
 import Label from '../components/Label';
 import Input from '../components/Input';
 import Button from '../components/Button';
+import {withRouter} from 'react-router-dom';
 
 class Login extends React.Component {
     constructor(props){
@@ -11,6 +13,7 @@ class Login extends React.Component {
         this.state = {'login': ''};
         this.state = {'password': ''};
         this.state = {'logged':false};
+        this.state = {'user':{}}
 
         this.handleChangeLogin = this.handleChangeLogin.bind(this);
         this.handleChangePassword = this.handleChangePassword.bind(this);
@@ -45,13 +48,18 @@ class Login extends React.Component {
         }
 
         fetch(`https://stone-shield.herokuapp.com/users/login`, requestOptions)
-        .then(res => res.json());
+        .then(res => res.json())
+        .then(res => this.setState({user:res}))
         this.setState({logged:true});
     }
 
     render() {
         if (this.getStateLoggedd()){
-            return <Redirect to='/user' />
+            if (this.state.user.id){
+                sessionStorage.setItem('@stone-sword/id',this.state.user.id)
+                return <Redirect to='/user' />
+            }
+
         }
         return (
         <Form>
@@ -66,11 +74,11 @@ class Login extends React.Component {
             </div>
             <div className="btn-group m-1">
                 <Button color="success" type="submit" value="Logar"  click={(e) => this.handleSubmit(e)}/>
-                <Button color="info" type="submit" value="Cadastre-se" />
+                <Link to="/user/registry" className="btn btn-info btn-lg  m-2">Cadastre-se</Link>  
             </div>
         </Form>
         );
     }
 }
 
-export default Login;
+export default withRouter(Login);
