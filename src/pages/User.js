@@ -5,14 +5,18 @@ import Main from '../components/Main';
 import Form from '../components/Form';
 import Label from '../components/Label';
 import Input from '../components/Input';
+import Button from '../components/Button';
+import {withRouter} from 'react-router-dom';
 
 import '../index.css';
 
 class User extends React.Component {
+  
   constructor(props){
     super(props);
     this.state = {'user':{}};
   }
+  user_id = sessionStorage.getItem('@stone-sword/id');
 
   componentDidMount(){
     const requestOptions = {
@@ -20,14 +24,12 @@ class User extends React.Component {
       headers: {'Content-Type': 'application/json'}
     }
 
-    fetch(`https://stone-shield.herokuapp.com/users/1`, requestOptions)
+    fetch(`https://stone-shield.herokuapp.com/users/${this.user_id}`, requestOptions)
     .then(res => res.json())
     .then(res  => this.setState({user: res}));
   }    
 
-
-  render () {
-    console.log(this.state.user)
+  render () {    
     return (
     <div>
       <nav className="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
@@ -36,17 +38,17 @@ class User extends React.Component {
 
       <div className="container-fluid">
       <div className="row">
-        <Sidebar>
+      <Sidebar>
           <SidebarItem value="Área do Usuário" />
           <div className="dropdown-divider"/>
-          <SidebarItem icon="users" value="Usuário" />
-          <SidebarItem icon="book" value="Meus Quadrinhos" />
-          <SidebarItem icon="mask" value="Meus Personagens" />
+          <SidebarItem icon="users" value="Usuário" link="user"/>
+          <SidebarItem icon="book" value="Meus Quadrinhos" link="/user/comics" />
+          <SidebarItem icon="mask" value="Meus Personagens" link="/user/characters"/>
           <hr />
           <SidebarItem value="Mundo Marvel" />
           <div className="dropdown-divider"/>
-          <SidebarItem icon="mask" value="Personagens" />
-          <SidebarItem icon="book-open" value="Quadrinhos" />
+          <SidebarItem icon="mask" value="Personagens" link="/characters/search" />
+          <SidebarItem icon="book-open" value="Quadrinhos" link="/comics/search"/>
         </Sidebar>
 
         <Main>
@@ -69,6 +71,7 @@ class User extends React.Component {
                 <Label input="email" value="Email" />: {this.state.user.email}
                 <Input type="text" name="email" />
             </div>
+            <Button color="success" type="submit" value="Atualizar Dados"  click={(e) => this.handleSubmit(e)}/>
           </Form>
         </Main>
       </div>
@@ -78,4 +81,4 @@ class User extends React.Component {
 }
 }
 
-export default User;
+export default withRouter(User);
