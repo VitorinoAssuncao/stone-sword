@@ -2,17 +2,22 @@ import React, { Fragment } from 'react';
 import Sidebar from '../components/Sidebar';
 import SidebarItem from '../components/SidebarItem';
 import Main from '../components/Main';
-import FavoriteButton,{sendFavorite} from '../components/FavoriteButton'
+import FavoriteButton,{removeFavorite,sendFavorite} from '../components/FavoriteButton'
 
 import '../index.css';
+import marvel_key from '../tools/config';
 
 class MyComics extends React.Component {
   constructor(props){
     super(props);
-    this.state = {'comics_list':{}};
+    this.state = {'favorite_list':{}};
+    this.marvel_data = [];
+
+    this.renderList = this.renderList.bind(this);
+    this.renderComics = this.renderComics.bind(this);
   }
 
-  toggle = () => this.handleChangeModal()
+  user_id = sessionStorage.getItem('@stone-sword/id');
 
   componentDidMount(){
     const requestOptions = {
@@ -20,46 +25,91 @@ class MyComics extends React.Component {
       headers: {'Content-Type': 'application/json'}
     }
 
-    fetch(`https://stone-shield.herokuapp.com/users/1/comics`, requestOptions)
+    fetch(`https://stone-shield.herokuapp.com/users/${this.user_id}/comics`, requestOptions)
     .then(res => res.json())
-    .then(res  => this.setState({comics_list: res}));
-  }
+    .then(res => this.setState({favorite_list: res}))
+    .then(res => this.renderList(this.state.favorite_list))
 
-  renderComics = (data) => {
-    if (data) {
+  };
+
+
+  renderList(item_list){
+    const requestOptions = {
+      method : 'GET'
+    }
+
+    if(item_list !== undefined){
+      item_list.forEach((item,index) =>{
+        fetch(`https://gateway.marvel.com/v1/public/comics/${item.marvel_id}?${marvel_key}`, requestOptions)
+        .then(res => res.json())
+        .then(res => {
+          if(res.status === "Ok"){
+            this.marvel_data.push(res.data.results[0])
+          }
+            else{
+              console.log('errou')
+            };
+            }
+        );
+        }
+      )
+    }
+    }
+
+    renderComics = (data) =>{
+      if (data){
       var mapRows = data.map((item,index) => (
-        <Fragment key={item.index}>
-              <li>
-                <b>Título:</b> {item.name}, <a className="text-danger" href={item.resourceURI}>Link</a>
-              </li>
+        <Fragment  key={item.id}>
+        <div className="card bg-light p-2 m-1">
+            <img className="border border-secondary rounded w-25 float-left" alt={item.title} src={`${item.thumbnail.path }/portrait_xlarge.jpg`} />
+            <p><b>Título:</b> {item.title} (Edição Nº {item.issueNumber})</p> 
+            <p><b>Descrição:</b> {item.description}</p>
+            {this.createFavoriteButton(this.state.favorite_list,item.id)}
+            <h3>Listagem de Personagens Participantes</h3>
+            {item.characters.available > 0 ?
+            (this.renderCharacters(item.characters.items)):("Não existem personagens informados")
+            }
+        </div>
         </Fragment>
       ));
       return mapRows;
+    }
     };
-  }
 
-  renderCharacther = (data) =>{
-    if (data){
-    var mapRows = data.map((item,index) => (
-      <Fragment  key={item.id}>
-      <div className="card bg-light p-2 m-1">
-          <img className="border border-secondary rounded w-25 float-left" alt={item.name} src={`${item.thumbnail.path }/portrait_medium.jpg`} />
-          <p><b>Nome Personagem:</b> {item.name}</p>
-          <p><b>Descrição: </b> 
-          {item.description ?
-          (item.description):("Sem descrição informada")
-          }</p>
-          <FavoriteButton color="danger fas fa-heart w-25" type="submit" value=" Favoritar"  click={() =>sendFavorite(1,item.id,'character')} />
-          <hr />
-          <h3>Listagem de Quadrinhos</h3>
-          {item.comics.available > 0 ?(this.renderComics(item.comics.items)):("Sem quadrinhos informados.")}
-          
-      </div>
-      </Fragment>
-    ));
-    return mapRows;
-  }
-  };
+    renderCharacters = (data) => {
+      if (data) {
+        var mapRows = data.map((item,index) => (
+          <Fragment key={item.index}>
+                <li>
+                  <b>Nome:</b> {item.name}, <a className="text-danger" href={item.resourceURI}>Link</a>
+                </li>
+          </Fragment>
+        ));
+        return mapRows;
+      };
+    }
+  
+    createFavoriteButton(favorite_list,item_id){
+      if(favorite_list !== undefined){
+        var result =this.evalComicsID(favorite_list,item_id) 
+        if (result.follow === 'follow'){
+          return <FavoriteButton color="success fas fa-heart w-25" type="submit" value=" Favoritar"  click={() =>sendFavorite(this.user_id,item_id,'comic')} />
+          }
+        else {
+          return <FavoriteButton color="danger fas fa-minus-circle w-25" type="submit" value=" Remover"  click={() =>removeFavorite(result.id,'comic')} />
+          };
+        }
+    }
+
+    evalComicsID(favorite_list,item_id) {
+      var result  = {follow:'follow',id:0}
+      if (favorite_list !== undefined){
+        favorite_list.forEach((item,index) =>
+          {item.marvel_id === item_id?(result = {follow: 'unfollow',id:item.id}):(console.log(''))}     
+        )
+      }
+      return result
+    }
 
   render () {
     return (
@@ -84,7 +134,7 @@ class MyComics extends React.Component {
         </Sidebar>
 
         <Main>
-            {console.log(this.state.comics_list)}
+        {this.renderComics(this.marvel_data)}
         </Main>
       </div>
     </div>
