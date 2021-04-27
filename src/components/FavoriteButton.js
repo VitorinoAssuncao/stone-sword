@@ -15,14 +15,11 @@ export function sendFavorite(user_id,marvel_id,type){
         if (type==='character'){
         fetch(`https://stone-shield.herokuapp.com/users/${user_id}/characthers`, requestOptions)
         .then(res => res.json())
-        .then(res  => console.log(res))
         .then(window.location.reload());
       }
       else {
         fetch(`https://stone-shield.herokuapp.com/users/${user_id}/comics`, requestOptions)
         .then(res => res.json())
-        .then(res => console.log(res))
-        .then(res  => console.log(res))
         .then(window.location.reload());
       }
     }
@@ -35,13 +32,11 @@ export function sendFavorite(user_id,marvel_id,type){
           if (type==='character'){
           fetch(`https://stone-shield.herokuapp.com/characther/${item_id}`, requestOptions)
           .then(res => res.json())
-          .then(res  => console.log(res))
           .then(window.location.reload());
         }
         else {
-          fetch(`https://stone-shield.herokuapp.com/comic/${item_id}`, requestOptions)
+          fetch(`https://stone-shield.herokuapp.com/comics/${item_id}`, requestOptions)
           .then(res => res.json())
-          .then(res  => console.log(res))
           .then(window.location.reload());
         }
       }
