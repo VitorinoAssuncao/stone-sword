@@ -63,7 +63,7 @@ class MyCharacter extends React.Component {
         var mapRows = data.map((item,index) => (
           <Fragment key={item.index}>
                 <li>
-                  <b>Título:</b> {item.name}, <a className="text-danger" href={item.resourceURI + "?"+marvel_key}>Link</a>
+                  <b>Título:</b> {item.name}
                 </li>
           </Fragment>
         ));

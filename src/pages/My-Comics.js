@@ -81,7 +81,7 @@ class MyComics extends React.Component {
         var mapRows = data.map((item,index) => (
           <Fragment key={item.index}>
                 <li>
-                  <b>Nome:</b> {item.name}, <a className="text-danger" href={item.resourceURI}>Link</a>
+                  <b>Nome:</b> {item.name}
                 </li>
           </Fragment>
         ));
