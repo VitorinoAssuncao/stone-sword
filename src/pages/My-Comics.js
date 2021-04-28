@@ -11,7 +11,8 @@ class MyComics extends React.Component {
   constructor(props){
     super(props);
     this.state = {'favorite_list':{}};
-    this.marvel_data = [];
+    this.tempData = []
+    this.statee = {'marvel_data': []};
 
     this.renderList = this.renderList.bind(this);
     this.renderComics = this.renderComics.bind(this);
@@ -44,7 +45,8 @@ class MyComics extends React.Component {
         .then(res => res.json())
         .then(res => {
           if(res.status === "Ok"){
-            this.marvel_data.push(res.data.results[0])
+            this.tempData.push(res.data.results[0])
+            this.setState({marvel_data:this.tempData})
           }
             else{
               console.log('errou')
@@ -134,7 +136,7 @@ class MyComics extends React.Component {
         </Sidebar>
 
         <Main>
-        {this.renderComics(this.marvel_data)}
+        {this.renderComics(this.state.marvel_data)}
         </Main>
       </div>
     </div>
