@@ -1,5 +1,4 @@
 import React, { Fragment } from 'react';
-import {Link} from 'react';
 import Sidebar from '../components/Sidebar';
 import SidebarItem from '../components/SidebarItem';
 import Main from '../components/Main';
@@ -12,8 +11,8 @@ class MyCharacter extends React.Component {
   constructor(props){
     super(props);
     this.state = {'character_list':{}};
-    this.marvel_data = [];
-    this.state = {'body':{}};
+    this.tempData = [];
+    this.state = {'marvel_data':[]};
 
     this.renderList = this.renderList.bind(this);
     this.renderCharacter = this.renderCharacter.bind(this);
@@ -46,7 +45,8 @@ class MyCharacter extends React.Component {
         .then(res => res.json())
         .then(res => {
           if(res.status === "Ok"){
-            this.marvel_data.push(res.data.results[0])
+            this.tempData.push(res.data.results[0])
+            this.setState({marvel_data:this.tempData})
           }
             else{
               console.log('errou')
@@ -138,7 +138,7 @@ class MyCharacter extends React.Component {
         </Sidebar>
 
         <Main>
-        {this.renderCharacter(this.marvel_data)}
+        {this.renderCharacter(this.state.marvel_data)}
         </Main>
       </div>
     </div>
